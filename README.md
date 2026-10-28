@@ -1,56 +1,56 @@
-# Welcome to your Expo app 👋
+# e2e-onboarding
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An Expo onboarding (an email code, then the notification prompt) tested end to end on iOS and Android with [e2e](https://www.npmjs.com/package/e2e).
 
-## Get started
+<img src="docs/screenshot.png" alt="The code step: Check your email, a code field, Verify, and Resend code" width="320">
 
-1. Install dependencies
+## How it works
 
-   ```bash
-   npm install
-   ```
+- **Email** (`src/app/index.tsx`): `POST /api/send-code` emails a 6-digit code with nodemailer.
+- **Code** (`src/app/code.tsx`): `POST /api/verify-code` checks it. Resend code replaces the first one.
+- **Notifications** (`src/app/notifications.tsx`): the OS asks; either answer leads to the welcome screen.
 
-2. Start the app
+The API routes are Expo Router routes, served by Metro in development. There's no database: the server signs each code into a token the app keeps. Progress is saved on the device, so a restart reopens the same step. Emails go to [Mailpit](https://mailpit.axllent.org), a local inbox.
 
-   ```bash
-   npx expo start
-   ```
+## Getting started
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+You need Node 22.22.3+ and Xcode with an iOS simulator, or the Android SDK with an emulator ([Expo's setup guide](https://docs.expo.dev/get-started/set-up-your-environment/)).
 
 ```bash
-npm run reset-project
+npm install
+brew install mailpit && brew services start mailpit
+npm run ios        # or: npm run android
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+`npm run ios` builds the app, installs it on the simulator, and starts Metro. Codes show up in Mailpit at [localhost:8025](http://localhost:8025). The app needs a native build, so it doesn't run in Expo Go.
 
-### Other setup steps
+## End-to-end tests
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+`tests/onboarding.e2e.ts` runs the same tests on iOS and Android. Each one starts on a fresh install with a new address and checks Mailpit's API for exactly one email per send. The agent gets the code the way a person would: `read_inbox`, a [project tool](https://e2e.tester.army/docs/tools) in `tests/mailpit.ts`, reads the inbox for it. The OS's prompt is answered on screen.
 
-## Learn more
+| Test | Expects |
+| --- | --- |
+| Finishes onboarding with the code from the email (agent) | Welcome, notifications On |
+| A wrong code shows an error | "That code isn't right." |
+| Resending replaces the first code (agent) | The first code fails, the newest works |
+| Denying notifications still finishes | Welcome, notifications Off |
+| Closing the app on the code step picks up there | Back on the code step after a cold launch |
 
-To learn more about developing your project with Expo, look at the following resources:
+The agent tests need a [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key: copy `.env.example` to `.env.local` and set `AI_GATEWAY_API_KEY`. Without it they skip; without Mailpit, all of them skip. With the app installed, run:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx e2e run --target ios
+npx e2e run --target android
+```
 
-## Join the community
+Without `--target`, both run, in about 3 minutes and under a cent. The runner starts Metro if it isn't running.
 
-Join our community of developers creating universal apps.
+## Scripts
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Command            | Description                         |
+| ------------------ | ----------------------------------- |
+| `npm start`        | Start Metro                         |
+| `npm run ios`      | Build and run the app on iOS        |
+| `npm run android`  | Build and run the app on Android    |
+| `npm run lint`     | Run ESLint                          |
+| `npm run test:e2e` | Run the e2e tests on both platforms |
