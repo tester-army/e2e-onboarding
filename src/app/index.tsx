@@ -1,98 +1,70 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect, router } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { LightButton } from '@/components/light-button';
+import { OnboardingScreen } from '@/components/onboarding-screen';
+import { TextField } from '@/components/text-field';
+import { colors, type } from '@/constants/theme';
+import { post } from '@/lib/api';
+import { saveProgress, useProgress } from '@/lib/progress';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
+export default function EmailScreen() {
+  const progress = useProgress();
+  if (!progress) return null;
+  // A restart opens here: go back to the saved step.
+  if (progress.step !== 'email') return <Redirect href={`/${progress.step}`} />;
+  return <EmailStep />;
 }
 
-export default function HomeScreen() {
+function EmailStep() {
+  const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function sendCode() {
+    setSending(true);
+    setError(null);
+    const address = email.trim();
+    const result = await post('/api/send-code', { email: address });
+    if (!result.ok) {
+      setError(result.error);
+      setSending(false);
+      return;
+    }
+    await saveProgress({ step: 'code', email: address, token: result.data.token });
+    router.replace('/code');
+  }
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+    <OnboardingScreen step="1 of 3" title="What's your email?" lede="We'll email you a 6-digit code.">
+      <TextField
+        testID="email"
+        label="Email"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="ada@example.com"
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
+        keyboardType="email-address"
+        textContentType="emailAddress"
+      />
+      {error ? (
+        <Text testID="email-error" accessibilityRole="alert" style={[type.bodyS, styles.error]}>
+          {error}
+        </Text>
+      ) : null}
+      <LightButton
+        testID="send-code"
+        label={sending ? 'Sending…' : 'Send code'}
+        disabled={sending || email.trim() === ''}
+        onPress={sendCode}
+      />
+    </OnboardingScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
+  error: { color: colors.accentOrange },
 });
