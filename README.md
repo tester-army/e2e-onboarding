@@ -28,13 +28,13 @@ npm run ios        # or: npm run android
 
 `tests/onboarding.e2e.ts` runs the same tests on iOS and Android. Each one starts on a fresh install with a new address and checks Mailpit's API for exactly one email per send. The agent gets the code the way a person would: `read_inbox`, a [project tool](https://e2e.tester.army/docs/tools) in `tests/mailpit.ts`, reads the inbox for it. The OS's prompt is answered on screen.
 
-| Test | Expects |
-| --- | --- |
-| Finishes onboarding with the code from the email (agent) | Welcome, notifications On |
-| A wrong code shows an error | "That code isn't right." |
-| Resending replaces the first code (agent) | The first code fails, the newest works |
-| Denying notifications still finishes | Welcome, notifications Off |
-| Closing the app on the code step picks up there | Back on the code step after a cold launch |
+| Test                                                     | Expects                                   |
+| -------------------------------------------------------- | ----------------------------------------- |
+| Finishes onboarding with the code from the email (agent) | Welcome, notifications On                 |
+| A wrong code shows an error                              | "That code isn't right."                  |
+| Resending replaces the first code (agent)                | The first code fails, the newest works    |
+| Denying notifications still finishes                     | Welcome, notifications Off                |
+| Closing the app on the code step picks up there          | Back on the code step after a cold launch |
 
 The agent tests need a [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key: copy `.env.example` to `.env.local` and set `AI_GATEWAY_API_KEY`. Without it they skip; without Mailpit, all of them skip. With the app installed, run:
 

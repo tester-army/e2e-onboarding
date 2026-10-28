@@ -3,8 +3,11 @@ import { expect } from 'e2e';
 
 import { codeIn, deleteEmailsTo, emailsTo, MAILPIT, mailpitIsUp } from './mailpit';
 
-export const skipMailpit = (await mailpitIsUp()) ? false : `start Mailpit to run the email tests (nothing at ${MAILPIT})`;
-export const skipAgent = skipMailpit || (process.env.AI_GATEWAY_API_KEY ? false : 'set AI_GATEWAY_API_KEY to run the agent tests');
+export const skipMailpit = (await mailpitIsUp())
+  ? false
+  : `start Mailpit to run the email tests (nothing at ${MAILPIT})`;
+export const skipAgent =
+  skipMailpit || (process.env.AI_GATEWAY_API_KEY ? false : 'set AI_GATEWAY_API_KEY to run the agent tests');
 
 export const test = base.extend<{ email: string; turnOnNotifications: (answer: 'allow' | 'deny') => Promise<void> }>({
   // A new address on a fresh install, opened on the email step. Its emails are deleted afterwards.

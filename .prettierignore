@@ -1,0 +1,9 @@
+.agents/
+.claude/
+.cursor/
+.e2e/
+.expo/
+android/
+ios/
+build/
+package-lock.json

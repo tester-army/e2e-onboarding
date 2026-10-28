@@ -8,7 +8,9 @@ export const MAILPIT = 'http://127.0.0.1:8025';
 type Email = { ID: string; To: { Address: string }[]; Subject: string; Created: string };
 
 export async function mailpitIsUp() {
-  return fetch(`${MAILPIT}/api/v1/info`).then((r) => r.ok, () => false);
+  return fetch(`${MAILPIT}/api/v1/info`)
+    .then((r) => r.ok)
+    .catch(() => false);
 }
 
 /** Emails to exactly this address, newest first. */
@@ -49,7 +51,9 @@ export const readInbox = defineTool(
     execute: async ({ to }) => {
       const emails = (await emailsTo(to)).slice(0, 5);
       if (!emails.length) return `No email to ${to} yet.`;
-      return Promise.all(emails.map(async (m) => ({ received: m.Created, subject: m.Subject, text: await emailText(m.ID) })));
+      return Promise.all(
+        emails.map(async (m) => ({ received: m.Created, subject: m.Subject, text: await emailText(m.ID) })),
+      );
     },
   }),
   { mutates: true },

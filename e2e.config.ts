@@ -11,7 +11,12 @@ try {
 
 // Metro serves the Debug builds' JavaScript and the API routes. The runner starts it, or reuses a running one.
 const metro = {
-  command: { executable: 'npx', args: ['expo', 'start', '--port', '8081'], reuseExisting: true, log: '.e2e/logs/metro.log' },
+  command: {
+    executable: 'npx',
+    args: ['expo', 'start', '--port', '8081'],
+    reuseExisting: true,
+    log: '.e2e/logs/metro.log',
+  },
   readyUrl: 'http://localhost:8081/status',
 };
 const bundleId = 'dev.e2e.onboarding';
@@ -32,7 +37,12 @@ export default {
       name: 'ios',
       engine: mobile({ platform: 'ios' }),
       // appPath is the build npm run ios copies, for the reinstall; the launch arguments keep the prompt in English.
-      app: { bundleId, appPath: 'build/ios/e2eOnboarding.app', launchArguments: ['-AppleLocale', 'en_US', '-AppleLanguages', '(en)'], ...metro },
+      app: {
+        bundleId,
+        appPath: 'build/ios/e2eOnboarding.app',
+        launchArguments: ['-AppleLocale', 'en_US', '-AppleLanguages', '(en)'],
+        ...metro,
+      },
     },
     { name: 'android', engine: mobile({ platform: 'android' }), app: { bundleId, ...metro } },
   ],

@@ -18,7 +18,13 @@ export function LightButton({ label, disabled, ...props }: LightButtonProps) {
 }
 
 const styles = StyleSheet.create({
-  button: { height: 44, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20, backgroundColor: colors.buttonFill },
+  button: {
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: colors.buttonFill,
+  },
   pressed: { backgroundColor: colors.textBright },
   disabled: { opacity: 0.4 },
   label: { color: colors.textOnLight },

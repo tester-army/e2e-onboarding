@@ -20,19 +20,23 @@ async function enterCode(screen: Screen, code: string) {
 
 // The OS's notification prompt isn't the app's own screen, so these retry.
 describe('onboarding', { tags: ['onboarding'], skip: skipMailpit, retries: 2, timeout: 180_000 }, () => {
-  test('finishes onboarding with the code from the email', { skip: skipAgent }, async ({ agent, screen, email, turnOnNotifications }) => {
-    await sendCode(screen, email);
-    await waitForEmails(email, 1);
+  test(
+    'finishes onboarding with the code from the email',
+    { skip: skipAgent },
+    async ({ agent, screen, email, turnOnNotifications }) => {
+      await sendCode(screen, email);
+      await waitForEmails(email, 1);
 
-    // The agent finds the code with the read_inbox tool.
-    await agent.act('verify the email address with the code from the email');
-    await expect(screen.getByTestId('notifications-on')).toBeVisible();
+      // The agent finds the code with the read_inbox tool.
+      await agent.act('verify the email address with the code from the email');
+      await expect(screen.getByTestId('notifications-on')).toBeVisible();
 
-    await turnOnNotifications('allow');
-    await expect(screen.getByTestId('welcome-title')).toHaveText(`Welcome, ${email}`);
-    await expect(screen.getByTestId('notifications-status')).toHaveText('On');
-    expect(await emailsTo(email)).toHaveLength(1);
-  });
+      await turnOnNotifications('allow');
+      await expect(screen.getByTestId('welcome-title')).toHaveText(`Welcome, ${email}`);
+      await expect(screen.getByTestId('notifications-status')).toHaveText('On');
+      expect(await emailsTo(email)).toHaveLength(1);
+    },
+  );
 
   test('a wrong code shows an error', async ({ screen, email }) => {
     await sendCode(screen, email);
