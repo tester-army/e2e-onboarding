@@ -35,7 +35,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios --output build/ios",
-    "lint": "expo lint",
+    "lint": "expo lint .",
     "test:e2e": "e2e run",
     "format": "prettier --write ."
   },
