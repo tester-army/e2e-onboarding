@@ -20,17 +20,22 @@
     "react-native-screens": "~4.30.0"
   },
   "devDependencies": {
+    "@e2e-dev/mobile": "^0.12.4",
     "@types/node": "^26.6.5",
     "@types/react": "~19.3.0",
+    "ai": "^7.0.0",
+    "e2e": "^0.21.3",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~58.0.4",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "zod": "^4.1.8"
   },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios",
-    "lint": "expo lint"
+    "ios": "expo run:ios --output build/ios",
+    "lint": "expo lint",
+    "test:e2e": "e2e run"
   },
   "private": true
 }
