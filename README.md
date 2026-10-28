@@ -14,7 +14,7 @@ The API routes are Expo Router routes, served by Metro in development. There's n
 
 ## Getting started
 
-You need Node 22.22.3+ and Xcode with an iOS simulator, or the Android SDK with an emulator ([Expo's setup guide](https://docs.expo.dev/get-started/set-up-your-environment/)).
+You need Node 22.22.3+ or 24.8+, and Xcode with an iOS simulator or the Android SDK with an emulator ([Expo's setup guide](https://docs.expo.dev/get-started/set-up-your-environment/)).
 
 ```bash
 npm install
@@ -22,7 +22,7 @@ brew install mailpit && brew services start mailpit
 npm run ios        # or: npm run android
 ```
 
-`npm run ios` builds the app, installs it on the simulator, and starts Metro. Codes show up in Mailpit at [localhost:8025](http://localhost:8025). The app needs a native build, so it doesn't run in Expo Go.
+`npm run ios` builds the app, installs it on the simulator, and starts Metro. Codes show up in Mailpit at [localhost:8025](http://localhost:8025); without Homebrew, see [Mailpit's other install options](https://mailpit.axllent.org/docs/install/). The app needs a native build, so it doesn't run in Expo Go.
 
 ## End-to-end tests
 
@@ -36,7 +36,7 @@ npm run ios        # or: npm run android
 | Denying notifications still finishes                     | Welcome, notifications Off                |
 | Closing the app on the code step picks up there          | Back on the code step after a cold launch |
 
-The agent tests need a [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key: copy `.env.example` to `.env.local` and set `AI_GATEWAY_API_KEY`. Without it they skip; without Mailpit, all of them skip. With the app installed, run:
+The agent tests need a [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key: copy `.env.example` to `.env.local` and set `AI_GATEWAY_API_KEY`. Without it they skip; without Mailpit, all of them skip. After `npm run ios` or `npm run android` (the iOS tests reinstall the build `npm run ios` copies to `build/ios`), run:
 
 ```bash
 npx e2e run --target ios
