@@ -2,10 +2,10 @@ import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { LightButton } from '@/components/light-button';
+import { Button } from '@/components/button';
 import { OnboardingScreen } from '@/components/onboarding-screen';
 import { TextField } from '@/components/text-field';
-import { colors, type } from '@/constants/theme';
+import { colors, space, type } from '@/constants/theme';
 import { post } from '@/lib/api';
 import { saveProgress, useProgress } from '@/lib/progress';
 
@@ -51,13 +51,13 @@ function CodeStep({ email, firstToken }: { email: string; firstToken: string }) 
   }
 
   return (
-    <OnboardingScreen step="2 of 3" title="Check your email" lede="Enter the 6-digit code we sent to">
-      <Text testID="code-email" style={[type.codeS, styles.email]}>
+    <OnboardingScreen step="2 of 3" title="check your email" lede="enter the 6-digit code we sent to">
+      <Text testID="code-email" style={[type.codeM, styles.email]}>
         {email}
       </Text>
       <TextField
         testID="code"
-        label="Code"
+        label="code"
         value={code}
         onChangeText={setCode}
         placeholder="123456"
@@ -65,23 +65,32 @@ function CodeStep({ email, firstToken }: { email: string; firstToken: string }) 
         keyboardType="number-pad"
         autoComplete="one-time-code"
         textContentType="oneTimeCode"
+        invalid={error !== null}
       />
       {error ? (
         <Text testID="code-error" accessibilityRole="alert" style={[type.bodyS, styles.error]}>
           {error}
         </Text>
       ) : null}
-      <LightButton testID="verify" label="Verify" disabled={busy || code.trim().length !== 6} onPress={verify} />
-      <Pressable testID="resend" accessibilityRole="button" disabled={busy} onPress={resend} style={styles.resend}>
-        <Text style={[type.buttonS, styles.resendLabel]}>Resend code</Text>
+      <Button testID="verify" label="verify" disabled={busy || code.trim().length !== 6} onPress={verify} />
+      <Pressable
+        testID="resend"
+        accessibilityRole="button"
+        accessibilityLabel="resend code"
+        accessibilityState={{ disabled: busy }}
+        disabled={busy}
+        onPress={resend}
+        style={({ pressed }) => [styles.resend, (pressed || busy) && styles.dimmed]}>
+        <Text style={[type.caption, styles.resendLabel]}>[ resend code ]</Text>
       </Pressable>
     </OnboardingScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  email: { marginTop: -24, color: colors.textPrimary },
-  error: { color: colors.accentOrange },
-  resend: { height: 44, alignItems: 'center', justifyContent: 'center' },
-  resendLabel: { color: colors.textSoft },
+  email: { marginTop: -space(3), color: colors.offWhite },
+  error: { color: colors.mint },
+  resend: { height: space(6), alignItems: 'center', justifyContent: 'center' },
+  dimmed: { opacity: 0.5 },
+  resendLabel: { color: colors.blue400 },
 });

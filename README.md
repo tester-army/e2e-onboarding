@@ -2,12 +2,12 @@
 
 An Expo onboarding (an email code, then the notification prompt) tested end to end on iOS and Android with [e2e](https://www.npmjs.com/package/e2e).
 
-<img src="docs/screenshot.png" alt="The code step: Check your email, a code field, Verify, and Resend code" width="320">
+<img src="docs/screenshot.png" alt="The code step: check your email, a code field, verify, and resend code" width="320">
 
 ## How it works
 
 - **Email** (`src/app/index.tsx`): `POST /api/send-code` emails a 6-digit code with nodemailer.
-- **Code** (`src/app/code.tsx`): `POST /api/verify-code` checks it. Resend code replaces the first one.
+- **Code** (`src/app/code.tsx`): `POST /api/verify-code` checks it. resend code replaces the first one.
 - **Notifications** (`src/app/notifications.tsx`): the OS asks; either answer leads to the welcome screen.
 
 The API routes are Expo Router routes, served by Metro in development. There's no database: the server signs each code into a token the app keeps. Progress is saved on the device, so a restart reopens the same step. Emails go to [Mailpit](https://mailpit.axllent.org), a local inbox.
@@ -30,10 +30,10 @@ npm run ios        # or: npm run android
 
 | Test                                                     | Expects                                   |
 | -------------------------------------------------------- | ----------------------------------------- |
-| Finishes onboarding with the code from the email (agent) | Welcome, notifications On                 |
-| A wrong code shows an error                              | "That code isn't right."                  |
+| Finishes onboarding with the code from the email (agent) | welcome, notifications on                 |
+| A wrong code shows an error                              | "that code isn't right."                  |
 | Resending replaces the first code (agent)                | The first code fails, the newest works    |
-| Denying notifications still finishes                     | Welcome, notifications Off                |
+| Denying notifications still finishes                     | welcome, notifications off                |
 | Closing the app on the code step picks up there          | Back on the code step after a cold launch |
 
 The agent tests need a [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key: copy `.env.example` to `.env.local` and set `AI_GATEWAY_API_KEY`. Without it they skip; without Mailpit, all of them skip. After `npm run ios` or `npm run android` (the iOS tests reinstall the build `npm run ios` copies to `build/ios`), run:

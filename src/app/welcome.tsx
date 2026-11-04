@@ -2,7 +2,7 @@ import { Redirect } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { OnboardingScreen } from '@/components/onboarding-screen';
-import { colors, type } from '@/constants/theme';
+import { colors, space, type } from '@/constants/theme';
 import { useProgress } from '@/lib/progress';
 
 export default function WelcomeScreen() {
@@ -11,11 +11,11 @@ export default function WelcomeScreen() {
   if (progress.step !== 'welcome') return <Redirect href="/" />;
 
   return (
-    <OnboardingScreen title={`Welcome, ${progress.email}`} titleTestID="welcome-title" lede="You're all set.">
+    <OnboardingScreen title={`welcome, ${progress.email}`} titleTestID="welcome-title" lede="you're all set.">
       <View style={styles.panel}>
-        <Text style={[type.bodyS, styles.soft]}>Notifications</Text>
-        <Text testID="notifications-status" style={[type.bodyS, styles.bright]}>
-          {progress.notifications ? 'On' : 'Off'}
+        <Text style={[type.caption, styles.muted]}>notifications</Text>
+        <Text testID="notifications-status" style={[type.caption, progress.notifications ? styles.on : styles.off]}>
+          {progress.notifications ? 'on' : 'off'}
         </Text>
       </View>
     </OnboardingScreen>
@@ -26,11 +26,13 @@ const styles = StyleSheet.create({
   panel: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 20,
+    alignItems: 'center',
+    padding: space(3),
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
+    borderColor: colors.neutral800,
     backgroundColor: colors.panel,
   },
-  soft: { color: colors.textSoft },
-  bright: { color: colors.textBright, fontWeight: '500' },
+  muted: { color: colors.neutral500 },
+  on: { color: colors.green },
+  off: { color: colors.offWhite },
 });

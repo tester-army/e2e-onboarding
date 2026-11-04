@@ -5,9 +5,9 @@ const transport = nodemailer.createTransport(process.env.SMTP_URL || 'smtp://127
 
 export async function sendCode(to: string, code: string) {
   await transport.sendMail({
-    from: 'e2e Onboarding <onboarding@example.com>',
+    from: 'e2e onboarding <onboarding@example.com>',
     to,
-    subject: 'Your e2e code',
-    text: `Your e2e code is ${code}.`,
+    subject: 'your e2e code',
+    text: `your e2e code is ${code}.`,
   });
 }

@@ -1,7 +1,7 @@
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 
-import { LightButton } from '@/components/light-button';
+import { Button } from '@/components/button';
 import { OnboardingScreen } from '@/components/onboarding-screen';
 import { askForNotifications } from '@/lib/notifications';
 import { saveProgress, useProgress } from '@/lib/progress';
@@ -25,10 +25,10 @@ function NotificationsStep({ email }: { email: string }) {
   }
 
   return (
-    <OnboardingScreen step="3 of 3" title="Turn on notifications" lede="Get a ping when your tests finish.">
-      <LightButton
+    <OnboardingScreen step="3 of 3" title="turn on notifications" lede="get a ping when your tests finish.">
+      <Button
         testID="notifications-on"
-        label={asking ? 'Asking…' : 'Turn on notifications'}
+        label={asking ? 'asking…' : 'turn on notifications'}
         disabled={asking}
         onPress={turnOn}
       />

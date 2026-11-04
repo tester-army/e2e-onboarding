@@ -2,7 +2,7 @@ import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 
-import { LightButton } from '@/components/light-button';
+import { Button } from '@/components/button';
 import { OnboardingScreen } from '@/components/onboarding-screen';
 import { TextField } from '@/components/text-field';
 import { colors, type } from '@/constants/theme';
@@ -37,10 +37,10 @@ function EmailStep() {
   }
 
   return (
-    <OnboardingScreen step="1 of 3" title="What's your email?" lede="We'll email you a 6-digit code.">
+    <OnboardingScreen step="1 of 3" title="what's your email?" lede="we'll email you a 6-digit code.">
       <TextField
         testID="email"
-        label="Email"
+        label="email"
         value={email}
         onChangeText={setEmail}
         placeholder="ada@example.com"
@@ -49,15 +49,16 @@ function EmailStep() {
         autoCorrect={false}
         keyboardType="email-address"
         textContentType="emailAddress"
+        invalid={error !== null}
       />
       {error ? (
         <Text testID="email-error" accessibilityRole="alert" style={[type.bodyS, styles.error]}>
           {error}
         </Text>
       ) : null}
-      <LightButton
+      <Button
         testID="send-code"
-        label={sending ? 'Sending…' : 'Send code'}
+        label={sending ? 'sending…' : 'send code'}
         disabled={sending || email.trim() === ''}
         onPress={sendCode}
       />
@@ -66,5 +67,5 @@ function EmailStep() {
 }
 
 const styles = StyleSheet.create({
-  error: { color: colors.accentOrange },
+  error: { color: colors.mint },
 });

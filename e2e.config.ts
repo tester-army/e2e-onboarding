@@ -39,7 +39,7 @@ export default {
       // appPath is the build npm run ios copies, for the reinstall; the launch arguments keep the prompt in English.
       app: {
         bundleId,
-        appPath: 'build/ios/e2eOnboarding.app',
+        appPath: 'build/ios/e2eonboarding.app',
         launchArguments: ['-AppleLocale', 'en_US', '-AppleLanguages', '(en)'],
         ...metro,
       },

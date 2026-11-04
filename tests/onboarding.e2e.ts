@@ -5,7 +5,7 @@ import { expect } from 'e2e';
 import { newestCode, skipAgent, skipMailpit, test, waitForEmails } from './fixtures';
 import { codeIn, emailsTo } from './mailpit';
 
-const WRONG_CODE = "That code isn't right.";
+const WRONG_CODE = "that code isn't right.";
 
 async function sendCode(screen: Screen, email: string) {
   await screen.getByTestId('email').fill(email);
@@ -32,8 +32,8 @@ describe('onboarding', { tags: ['onboarding'], skip: skipMailpit, retries: 2, ti
       await expect(screen.getByTestId('notifications-on')).toBeVisible();
 
       await turnOnNotifications('allow');
-      await expect(screen.getByTestId('welcome-title')).toHaveText(`Welcome, ${email}`);
-      await expect(screen.getByTestId('notifications-status')).toHaveText('On');
+      await expect(screen.getByTestId('welcome-title')).toHaveText(`welcome, ${email}`);
+      await expect(screen.getByTestId('notifications-status')).toHaveText('on');
       expect(await emailsTo(email)).toHaveLength(1);
     },
   );
@@ -72,8 +72,8 @@ describe('onboarding', { tags: ['onboarding'], skip: skipMailpit, retries: 2, ti
     await expect(screen.getByTestId('notifications-on')).toBeVisible();
 
     await turnOnNotifications('deny');
-    await expect(screen.getByTestId('welcome-title')).toHaveText(`Welcome, ${email}`);
-    await expect(screen.getByTestId('notifications-status')).toHaveText('Off');
+    await expect(screen.getByTestId('welcome-title')).toHaveText(`welcome, ${email}`);
+    await expect(screen.getByTestId('notifications-status')).toHaveText('off');
   });
 
   test('closing the app on the code step picks up there', async ({ app, screen, email }) => {
