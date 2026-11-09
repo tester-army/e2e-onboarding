@@ -54,3 +54,10 @@ Without `--target`, both run, in about 3 minutes and under a cent. The runner st
 | `npm run android`  | Build and run the app on Android    |
 | `npm run lint`     | Run ESLint                          |
 | `npm run test:e2e` | Run the e2e tests on both platforms |
+
+<a href="https://e2e.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/e2e-logo-white.png">
+    <img src="docs/e2e-logo-black.png" alt="e2e" width="160">
+  </picture>
+</a>
